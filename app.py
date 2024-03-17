@@ -1,6 +1,7 @@
 import pandas as pd
 import plotly.express as px
 import seaborn
+from shiny import reactive
 from shiny.express import input, ui, render
 from shinywidgets import render_plotly, render_altair
 import altair as alt
@@ -106,3 +107,7 @@ with ui.card(full_screen=True):
                 stroke=None
             )
         )
+
+@reactive.calc
+def filtered_data():
+    return penguins_df
