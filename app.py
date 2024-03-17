@@ -22,22 +22,22 @@ with ui.sidebar(open="open"):
 with ui.layout_columns():
     @render.data_frame
     def table():
-        return render.DataTable(penguins_df)
+        return render.DataTable(filtered_data())
         
     @render.data_frame
     def grid():
-        return render.DataGrid(penguins_df)
+        return render.DataGrid(filtered_data())
         
 with ui.layout_columns():
     
     @render_plotly
     def plotly_hist():
-        return px.histogram(penguins_df, x=input.selected_attribute.get(),\
+        return px.histogram(filtered_data(), x=input.selected_attribute.get(),\
             nbins=input.plotly_bin_count.get())
 
     @render.plot()
     def seaborn_hist():
-        return seaborn.histplot(penguins_df, x=input.selected_attribute.get(),\
+        return seaborn.histplot(filtered_data(), x=input.selected_attribute.get(),\
             bins=input.seaborn_bin_count.get())
 
 with ui.card(full_screen=True):
@@ -46,7 +46,7 @@ with ui.card(full_screen=True):
     
     @render_plotly
     def plotly_scatterplot():
-        return px.scatter(penguins_df, x="bill_length_mm", y="bill_depth_mm", color="species")
+        return px.scatter(filtered_data(), x="bill_length_mm", y="bill_depth_mm", color="species")
 
 with ui.card(full_screen=True):
 
@@ -110,4 +110,4 @@ with ui.card(full_screen=True):
 
 @reactive.calc
 def filtered_data():
-    return penguins_df
+    return penguins_df[penguins_df['species'].isin(input.selected_species_list.get())]
