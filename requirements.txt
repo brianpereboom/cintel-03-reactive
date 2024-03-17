@@ -1,0 +1,8 @@
+altair
+anywidget
+palmerpenguins
+jsonschema
+pandas
+plotly
+seaborn
+vega_datasets
