@@ -61,14 +61,15 @@ with ui.card(full_screen=True):
         attribute[-1] = '(' + attribute[-1] + ')'
         attribute = ' '.join(attribute)
 
+        filtered_db = filtered_data()
         penguins_data = {}
-        for island in penguins_df['island'].unique():
-            penguins_data[island] = penguins_df[penguins_df['island'] == island][input.selected_attribute.get()]
+        for island in filtered_db['island'].unique():
+            penguins_data[island] = filtered_db[filtered_db['island'] == island][input.selected_attribute.get()]
         penguins_data = pd.DataFrame(penguins_data)
 
         height = 25
-        step = 1000
-        
+        step = 1000 * input.ridgeline_height()
+
         return (
             alt.Chart(penguins_data).transform_fold( 
                 list(penguins_data.keys()), 
@@ -106,6 +107,19 @@ with ui.card(full_screen=True):
             ).configure_view(
                 stroke=None
             )
+        )
+
+    @render.ui
+    def zoom_slider():
+        return ui.input_slider("ridgeline_height", "Zoom", 0, 1, 0.25, step=0.01)
+
+    @reactive.effect
+    @reactive.event(input.ridgeline_height)
+    def zoom_text():
+        ui.insert_ui(
+            ui.p(f"Scale: {input.ridgeline_height()}!"),
+            selector="#ridgeline_height",
+            where="afterEnd"
         )
 
 @reactive.calc
